@@ -2,6 +2,7 @@
 Implementation of k-means
 """
 import numpy as np
+import sys
 class KMeans():
     def __init__(self, graph, nClusters, distanceMetric="euclidean"):
         self.graph = graph
@@ -14,6 +15,7 @@ class KMeans():
         range_min = self.graph.network.min(axis=0)
         self.graph.clusterCenters = np.hstack([np.random.uniform(range_min[0],range_max[0],[self.nClusters,1]),np.random.uniform(range_min[1],range_max[1],[self.nClusters,1])])
         self.graph.show("Original/Initial points")
+        self.graph.show("Original/Initial points + Initial cluster centers", True)
         oldCenters = newCenters = self.graph.clusterCenters
         i= 0
         while True :
@@ -26,13 +28,23 @@ class KMeans():
             newCenters = self.graph.clusterCenters
             self.graph.show("Update: Iteration " + str(i), True)
             i += 1
-            if np.sum(self.distanceMetric.distance(oldCenters, newCenters, self.nClusters).diagonal()) < 1:
+            if np.sum(self.distanceMetric.distance(oldCenters, newCenters, self.nClusters).diagonal()) < 0.1:
                 self.graph.show("Final Clusters", True, True)
                 break
 
     def updateCenters(self, clusterCenters):
         for i in range(self.nClusters):
-            clusterCenters[i] = np.mean(self.graph.network[self.graph.color == i], axis=0)
+            # Possible that no points are to be assigned to a cluster center
+            # This is a problem. Restart and show that we are researting
+            closePoints = self.graph.network[self.graph.color == i]
+            if closePoints.size == 0:
+                # print("Restarting")
+                # Restart by calling the k-means' run function
+                self.run()
+                # Call system exit so that the previous failed attempts will stop
+                sys.exit()
+            else:
+                clusterCenters[i] = np.mean(closePoints, axis=0)
         return clusterCenters
 
 

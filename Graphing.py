@@ -6,7 +6,6 @@ import matplotlib.pyplot as plt
 
 class Graph():
     def __init__(self):
-        print("Graph created")
         self.network = np.array([])
         self.color = np.array([])
         self.clusterCenters = np.array([])
