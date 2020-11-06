@@ -33,18 +33,29 @@ class Points():
             plt.clf()
 
 class MyGraph():
-    def __init__(self, size):
-        self.size = size
-        self.adjacency_list = np.zeros([size, size])
+    def __init__(self, networkxGraph, numNodes, nodes, edges):
+        self.graph = networkxGraph
+        self.numNodes = numNodes
+        self.adjacency_list = np.zeros([numNodes, numNodes])
+        self.nodes = nodes
+        self.edges = edges
+        self.colors = None
+        self.clusterCenters = np.array([])
 
-    def fill_adjacency_list(self, edges):
+    def init_adjacency_list(self, edges):
         for edge1, edge2 in edges:
             self.adjacency_list[edge1, edge2] = self.adjacency_list[edge2, edge1] = 1
 
-    def page_rank(self):
-        A = self.adjacency_list
-        d = np.dot(A,np.ones([self.size,1]))
-        D = np.identity(self.size) * d
-        P = np.dot(A,np.linalg.inv(D))
-        colors = np.dot((0.15)*np.linalg.inv(np.identity(self.size)-0.85*P),np.ones([self.size,1])/self.size)
+    def fill_adjacency_list(self, adj_list, nodeList):
+        for x in range(len(nodeList)):
+            for y in range(len(nodeList)):
+                adj_list[x,y] = self.adjacency_list[x,y]
+
+    def page_rank(self, adjacency_list, numNodes):
+        damping_factor = 0.85
+        A = adjacency_list
+        d = np.dot(A,np.ones([numNodes,1]))
+        D = np.identity(numNodes) * d
+        P = np.dot(A,np.linalg.pinv(D))
+        colors = np.dot((1 - damping_factor)*np.linalg.inv(np.identity(numNodes)-damping_factor*P),np.ones([numNodes,1])/numNodes)
         return colors
