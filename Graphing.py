@@ -4,7 +4,7 @@ Graphing library
 import numpy as np
 import matplotlib.pyplot as plt
 
-class Graph():
+class Points():
     def __init__(self):
         self.network = np.array([])
         self.color = np.array([])
@@ -32,8 +32,19 @@ class Graph():
         else:
             plt.clf()
 
-class Point():
-    def __init__(self,x,y,label):
-        self.x = x
-        self.y = y
-        self.label = label
+class MyGraph():
+    def __init__(self, size):
+        self.size = size
+        self.adjacency_list = np.zeros([size, size])
+
+    def fill_adjacency_list(self, edges):
+        for edge1, edge2 in edges:
+            self.adjacency_list[edge1, edge2] = self.adjacency_list[edge2, edge1] = 1
+
+    def page_rank(self):
+        A = self.adjacency_list
+        d = np.dot(A,np.ones([self.size,1]))
+        D = np.identity(self.size) * d
+        P = np.dot(A,np.linalg.inv(D))
+        colors = np.dot((0.15)*np.linalg.inv(np.identity(self.size)-0.85*P),np.ones([self.size,1])/self.size)
+        return colors
