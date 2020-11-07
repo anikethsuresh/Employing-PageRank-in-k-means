@@ -24,17 +24,15 @@ def get_edges(points, threshold):
 
 if __name__ == "__main__":
     numNodes = 1000
-    circles, _ = datasets.make_moons(n_samples=numNodes, noise=0.05)
-    # Get all nodes in the format that networkx needs
+    circles, _ = datasets.make_moons(n_samples=numNodes, random_state=8, noise=0.05)
     nodes = {}
     for point in range(len(circles)):
         nodes[point] = tuple(circles[point])
-    edges = get_edges(circles, 0.1)
+    edges = get_edges(circles, 0.15)
     G = nx.Graph()
     G.add_nodes_from(nodes)
     G.add_edges_from(edges)
     myGraph = MyGraph(G, numNodes, nodes, edges)
-    nx.draw_networkx_edges(G,nodes,alpha=0.4, edge_color="#424242")
-    nx.draw_networkx_nodes(G,nodes,node_size=30,nodelist=list(range(len(circles))),node_color='r', alpha = 0.5)
-    plt.show()
-    KMeansWithPageRank(myGraph, 2)
+    colors = myGraph.page_rank(myGraph.adjacency_list, numNodes)
+    myGraph.show("Neighbourhood Graph", colors, showEdges=False)
+    KMeansWithPageRank(myGraph, 2, showEdges=False)

@@ -25,12 +25,21 @@ class DistanceMetric():
                 for dist in main_distances[node].keys():
                     distances[index][dist] = main_distances[node][dist]
                 index += 1
+            # The distances here could be 0 is they are disconnected
+            # Set the distances to infinity if this is the case
+            # for i in range(distances.shape[0]):
+            #     distances[i][np.where(distances[i] == 0)[0]] = 9999
+            #     # Except for the distance of a node to itself. Reset that to 0
+            #     distances[i][a[i]] = 0
             return distances
 
-    def distance_between_centers(self, oldCenters, newCenters, adjacency_list):
+    def distance_between_centers(self, G, oldCenters, newCenters):
         distances = np.zeros([oldCenters.size])
         for i in range(oldCenters.size):
-            distances[i] = adjacency_list[oldCenters[i]][newCenters[i]]
+            try:
+                distances[i] = nx.dijkstra_path_length(G, oldCenters[i], newCenters[i])
+            except nx.NetworkXNoPath:
+                distances[i] = 9999
         return distances
 
 if __name__ == "__main__":

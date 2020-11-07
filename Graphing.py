@@ -41,6 +41,7 @@ class MyGraph():
         self.nodes = nodes
         self.edges = edges
         self.colors = None
+        self.init_adjacency_list(self.edges)
         self.clusterCenters = np.array([])
 
     def init_adjacency_list(self, edges):
@@ -52,13 +53,20 @@ class MyGraph():
             for y in range(len(nodeList)):
                 adj_list[x,y] = self.adjacency_list[nodeList[x],nodeList[y]]
                 
-    def show(self, title, colors, withCenters=False, final=False):
+    def show(self, title, colors, withCenters=False, final=False, showEdges=True):
         plt.title(title)
         plt.xlabel("X")
         plt.ylabel("Y")
-        nx.draw_networkx_edges(self.graph,self.nodes,alpha=0.4, edge_color="#424242")
-        nx.draw_networkx_nodes(self.graph,self.nodes, node_color=list(colors),cmap=plt.cm.jet,
+        if showEdges:
+            nx.draw_networkx_edges(self.graph,self.nodes,alpha=0.4, edge_color="#424242")
+        nx.draw_networkx_nodes(self.graph,self.nodes, node_color=list(colors),cmap=plt.cm.jet, alpha=0.5,
                        node_size=20)
+        # Debugging: colors the first node    
+        # nx.draw_networkx_nodes(self.graph,self.nodes, nodelist = [0],cmap=plt.cm.jet,node_color="#ff1cf3",
+        #                node_size=20)
+        # Debugging: prints the labels with the nodes
+        # nx.draw_networkx_labels(self.graph,self.nodes, {x:str(x) for x in self.nodes.keys()}, font_size=4)
+
         if withCenters:
             nx.nx.draw_networkx_nodes(self.graph,self.nodes,nodelist =list(self.clusterCenters),node_color="#ff1c03",node_shape="X",
                         node_size=80)

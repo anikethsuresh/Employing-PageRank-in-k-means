@@ -6,11 +6,11 @@ from Graphing import *
 import sys
 
 class KMeansWithPageRank():
-    def __init__(self, myGraph, nClusters, distanceMetric="dijkstra"):
+    def __init__(self, myGraph, nClusters, distanceMetric="dijkstra", showEdges=True):
         self.graph = myGraph
         self.nClusters = nClusters
         self.distanceMetric = DistanceMetric("dijkstra")
-        self.graph.init_adjacency_list(self.graph.edges)
+        self.showEdges = showEdges
         self.run()
 
     def run(self):
@@ -20,14 +20,15 @@ class KMeansWithPageRank():
             oldClusterCenters = self.graph.clusterCenters.copy()
             distances = self.distanceMetric.distance(self.graph.clusterCenters, self.graph, self.nClusters)
             self.colors = np.argmin(distances, axis=0)
-            self.graph.show("Iteration:" + str(i + 1), self.colors, withCenters=True)
+            self.graph.show("Iteration:" + str(i + 1), self.colors, withCenters=True, showEdges=self.showEdges)
             self.updateCenters()
             newClusterCenters = self.graph.clusterCenters
-            terminationCriteria = self.distanceMetric.distance_between_centers(oldClusterCenters, newClusterCenters, self.graph.adjacency_list)
-            terminationCriteria = np.sum(terminationCriteria) <= 1
+            terminationCriteria = self.distanceMetric.distance_between_centers(self.graph.graph, oldClusterCenters, newClusterCenters)
+            terminationCriteria = np.all(terminationCriteria == terminationCriteria[0])
             i += 1
             if terminationCriteria:
-                self.graph.show("Final Clusters (Total Iterations: " + str(i) + ")", self.colors, withCenters=True, final=True)
+                self.graph.clusterCenters = oldClusterCenters
+                self.graph.show("Final Clusters (Total Iterations: " + str(i) + ")", self.colors, withCenters=True, final=True, showEdges=self.showEdges)
                 break
             
 
