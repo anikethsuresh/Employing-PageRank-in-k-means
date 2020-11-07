@@ -10,7 +10,7 @@ if __name__ == "__main__":
     nodes = nx.get_node_attributes(G,'pos')
     edges = list(G.edges)
     myGraph = MyGraph(G, numNodes, nodes, edges)
-    KMeansWithPageRank(myGraph, 6)
+    KMeansWithPageRank(myGraph, 4)
     # myGraph.init_adjacency_list(edges)
     # colors = myGraph.page_rank(myGraph.adjacency_list, numNodes)
     # nx.draw_networkx_edges(G,nodes,alpha=0.4)

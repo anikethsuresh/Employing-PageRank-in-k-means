@@ -49,7 +49,7 @@ class MyGraph():
     def fill_adjacency_list(self, adj_list, nodeList):
         for x in range(len(nodeList)):
             for y in range(len(nodeList)):
-                adj_list[x,y] = self.adjacency_list[x,y]
+                adj_list[x,y] = self.adjacency_list[nodeList[x],nodeList[y]]
 
     def page_rank(self, adjacency_list, numNodes):
         damping_factor = 0.85

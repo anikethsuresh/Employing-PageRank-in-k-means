@@ -62,7 +62,12 @@ class KMeansWithPageRank():
     def run(self):
         # Select nCluster nodes as starting points
         self.graph.clusterCenters = np.random.randint(0, self.graph.numNodes, self.nClusters)
-        for i in range(60):
+        # nx.draw_networkx_edges(self.graph.graph,self.graph.nodes,alpha=0.4)
+        # nx.draw_networkx_nodes(self.graph.graph,self.graph.nodes,nodelist =list(self.graph.clusterCenters),node_color="#ff1c03",node_shape="X",
+        #             node_size=80)
+        # plt.pause(1)
+        # plt.clf()
+        for i in range(10):
         # Get distance of these clusters to all other nodes
             distances = self.distanceMetric.distance(self.graph.clusterCenters, self.graph, self.nClusters)
             self.colors = np.argmin(distances, axis=0)
@@ -71,7 +76,10 @@ class KMeansWithPageRank():
                         node_size=20)
             nx.draw_networkx_nodes(self.graph.graph,self.graph.nodes,nodelist =list(self.graph.clusterCenters),node_color="#ff1c03",node_shape="X",
                         node_size=80)
-            plt.pause(0.5)
+            labels = {x:str(x) for x in self.graph.clusterCenters}
+            nx.draw_networkx_labels(self.graph.graph,self.graph.nodes, labels=labels, font_color="#02CC16")
+            plt.title("Iteration:" + str(i + 1))
+            plt.pause(1)
             plt.clf()
             # Get PageRank for each cluster
             self.updateCenters()
