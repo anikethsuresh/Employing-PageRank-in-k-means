@@ -3,6 +3,7 @@ Graphing library
 """
 import numpy as np
 import matplotlib.pyplot as plt
+import networkx as nx
 
 class Points():
     def __init__(self):
@@ -50,6 +51,22 @@ class MyGraph():
         for x in range(len(nodeList)):
             for y in range(len(nodeList)):
                 adj_list[x,y] = self.adjacency_list[nodeList[x],nodeList[y]]
+                
+    def show(self, title, colors, withCenters=False, final=False):
+        plt.title(title)
+        plt.xlabel("X")
+        plt.ylabel("Y")
+        nx.draw_networkx_edges(self.graph,self.nodes,alpha=0.4, edge_color="#424242")
+        nx.draw_networkx_nodes(self.graph,self.nodes, node_color=list(colors),cmap=plt.cm.jet,
+                       node_size=20)
+        if withCenters:
+            nx.nx.draw_networkx_nodes(self.graph,self.nodes,nodelist =list(self.clusterCenters),node_color="#ff1c03",node_shape="X",
+                        node_size=80)
+        plt.pause(1)
+        if final:
+            plt.show()
+        else:
+            plt.clf()
 
     def page_rank(self, adjacency_list, numNodes):
         damping_factor = 0.85

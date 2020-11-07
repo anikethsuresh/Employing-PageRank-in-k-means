@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import networkx as nx
 import numpy as np
-from Kmeans import KMeansWithPageRank
+from KMeansWithPageRank import KMeansWithPageRank
 from Graphing import MyGraph
 
 if __name__ == "__main__":
