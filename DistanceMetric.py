@@ -16,7 +16,9 @@ class DistanceMetric():
             return np.sqrt(total)
         
         elif self.name == "dijkstra":
+            print("about to calculate the distance")
             all_distances = dict(nx.all_pairs_shortest_path_length(b.graph))
+            print("calculated distance")
             main_distances = {}
             distances = np.zeros([a.size, b.numNodes])
             index = 0

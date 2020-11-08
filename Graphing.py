@@ -4,6 +4,7 @@ Graphing library
 import numpy as np
 import matplotlib.pyplot as plt
 import networkx as nx
+import trimesh
 
 class Points():
     def __init__(self):
@@ -84,3 +85,17 @@ class MyGraph():
         P = np.dot(A,np.linalg.pinv(D))
         colors = np.dot((1 - damping_factor)*np.linalg.inv(np.identity(numNodes)-damping_factor*P),np.ones([numNodes,1])/numNodes)
         return colors
+
+class My3DGraph(MyGraph):
+    def __init__(self, networkxGraph, trimeshMesh, numNodes, nodes, edges):
+        print("Working with a 3D graph. Graph created")
+        super().__init__(networkxGraph, numNodes, nodes, edges)
+        self.mesh = trimeshMesh
+    
+    def show(self, title, colors):
+        for i in range(self.clusterCenters.shape[0]):
+            indices = np.where(colors == i)
+            self.mesh.visual.vertex_colors[indices] = trimesh.visual.random_color()
+        # indices = list(range(self.mesh.visual.vertex_colors.shape[0]))
+        self.mesh.show()
+        
