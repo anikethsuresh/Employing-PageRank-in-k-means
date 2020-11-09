@@ -4,7 +4,11 @@ import networkx as nx
 class DistanceMetric():
     def __init__(self, name="euclidean"):
         self.name = name
+        self.all_distances = None
     
+    def init_distances(self, network):
+        self.all_distances = dict(nx.all_pairs_shortest_path_length(network))
+
     def distance(self,a ,b, nClusters):
         if self.name == "euclidean":
             nPoints = b.shape[0]
@@ -16,32 +20,47 @@ class DistanceMetric():
             return np.sqrt(total)
         
         elif self.name == "dijkstra":
-            print("about to calculate the distance")
-            all_distances = dict(nx.all_pairs_shortest_path_length(b.graph))
-            print("calculated distance")
             main_distances = {}
             distances = np.zeros([a.size, b.numNodes])
             index = 0
             for node in a:
-                main_distances[node] = all_distances[node]
+                main_distances[node] = self.all_distances[node]
                 for dist in main_distances[node].keys():
                     distances[index][dist] = main_distances[node][dist]
                 index += 1
-            # The distances here could be 0 is they are disconnected
-            # Set the distances to infinity if this is the case
-            # for i in range(distances.shape[0]):
-            #     distances[i][np.where(distances[i] == 0)[0]] = 9999
-            #     # Except for the distance of a node to itself. Reset that to 0
-            #     distances[i][a[i]] = 0
             return distances
+    
+    def distance3D(self, a, b, nClusters, actualVertices):
+        main_distances = {}
+        for i in range(nClusters):
+            a[i] = actualVertices[a[i]]
+        distances = np.zeros([a.size, b.numNodes])
+        index = 0
+        for node in a:
+            main_distances[node] = self.all_distances[node]
+            for dist in main_distances[node].keys():
+                distances[index][dist] = main_distances[node][dist]
+            index += 1
+        for x in range(distances.shape[0]):
+            for y in range(distances.shape[1]):
+                distances[x,y] = distances[actualVertices[x],actualVertices[y]]
+        return distances
 
     def distance_between_centers(self, G, oldCenters, newCenters):
         distances = np.zeros([oldCenters.size])
         for i in range(oldCenters.size):
-            try:
-                distances[i] = nx.dijkstra_path_length(G, oldCenters[i], newCenters[i])
-            except nx.NetworkXNoPath:
+            new_distance = self.all_distances[oldCenters[i]].get(newCenters[i])
+            if new_distance is None:
                 distances[i] = 9999
+            else:
+                distances[i] = self.all_distances[oldCenters[i]].get(newCenters[i])
+        return distances
+
+    def distance_between_centers3D(self, G, oldCenters, newCenters, actualVertices):
+        distances = np.zeros([oldCenters.size])
+        for i in range(oldCenters.size):
+            distances[i] = self.all_distances[actualVertices[oldCenters[i]]].get(actualVertices[newCenters[i]])
+            # Does not make sense to use PageRank on a disconnected graph
         return distances
 
 if __name__ == "__main__":

@@ -6,12 +6,12 @@ from Graphing import *
 import sys
 
 class KMeansWithPageRank():
-    def __init__(self, myGraph, nClusters, distanceMetric="dijkstra", showEdges=True, mesh3D = False):
+    def __init__(self, myGraph, nClusters, distanceMetric="dijkstra", showEdges=True):
         self.graph = myGraph
         self.nClusters = nClusters
         self.distanceMetric = DistanceMetric("dijkstra")
         self.showEdges = showEdges
-        self.mesh3D = mesh3D
+        self.distanceMetric.init_distances(myGraph.graph)
         self.run()
 
     def run(self):
@@ -19,22 +19,30 @@ class KMeansWithPageRank():
         i = 0
         while True:
             oldClusterCenters = self.graph.clusterCenters.copy()
-            distances = self.distanceMetric.distance(self.graph.clusterCenters, self.graph, self.nClusters)
-            self.colors = np.argmin(distances, axis=0)
-            if self.mesh3D:
+            if isinstance(self.graph, My3DGraph):
+                distances = self.distanceMetric.distance3D(self.graph.clusterCenters, self.graph, self.nClusters, self.graph.actualVertices)
+                self.colors = np.argmin(distances, axis=0)
                 self.graph.show("Iteration:" + str(i + 1), self.colors)
-            else:
+                self.updateCenters()
+                newClusterCenters = self.graph.clusterCenters
+                terminationCriteria = self.distanceMetric.distance_between_centers3D(self.graph.graph, oldClusterCenters, newClusterCenters, self.graph.actualVertices)
+                print(terminationCriteria)
+                terminationCriteria = terminationCriteria[terminationCriteria==0].size/self.graph.clusterCenters.size > 0.5 and np.all(oldClusterCenters == newClusterCenters)
+            elif isinstance(self.graph, MyGraph):
+                distances = self.distanceMetric.distance(self.graph.clusterCenters, self.graph, self.nClusters)
+                self.colors = np.argmin(distances, axis=0)
                 self.graph.show("Iteration:" + str(i + 1), self.colors, withCenters=True, showEdges=self.showEdges)
-            self.updateCenters()
-            newClusterCenters = self.graph.clusterCenters
-            terminationCriteria = self.distanceMetric.distance_between_centers(self.graph.graph, oldClusterCenters, newClusterCenters)
-            terminationCriteria = np.all(terminationCriteria == terminationCriteria[0])
+                self.updateCenters()
+                newClusterCenters = self.graph.clusterCenters
+                terminationCriteria = self.distanceMetric.distance_between_centers(self.graph.graph, oldClusterCenters, newClusterCenters)
+                # If they are disconnected the next statement will be true
+                terminationCriteria = np.all(terminationCriteria == terminationCriteria[0])
             i += 1
             if terminationCriteria:
                 self.graph.clusterCenters = oldClusterCenters
-                if self.mesh3D:
+                if isinstance(self.graph, My3DGraph):
                     self.graph.show("Final", self.colors)
-                else:
+                elif isinstance(self.graph, MyGraph):
                     self.graph.show("Final Clusters (Total Iterations: " + str(i) + ")", self.colors, withCenters=True, final=True, showEdges=self.showEdges)
                 break
             
@@ -46,6 +54,7 @@ class KMeansWithPageRank():
                 self.run()
                 sys.exit()
             adjacency_matrix_cluster_i = np.zeros([nodes.size, nodes.size])
+            # TODO Optimize the code below
             self.graph.fill_adjacency_list(adjacency_matrix_cluster_i, nodes)
             cluster_page_rank = self.graph.page_rank(adjacency_matrix_cluster_i, len(nodes))
             self.graph.clusterCenters[cluster_i] =  nodes[np.argmax(cluster_page_rank)]

@@ -6,15 +6,11 @@ import matplotlib.pyplot as plt
 import networkx as nx
 import trimesh
 
-class Points():
+class MyPoints():
     def __init__(self):
-        self.network = np.array([])
-        self.color = np.array([])
-        self.clusterCenters = np.array([])
-
-    def addPoint(self, point, color):
-        self.network = np.vstack((self.network,point))
-        self.color = np.vstack((self.color,color))
+        self.network = None
+        self.color = None
+        self.clusterCenters = None
     
     def setNetwork(self, network, color):
         self.network = network
@@ -50,9 +46,7 @@ class MyGraph():
             self.adjacency_list[edge1, edge2] = self.adjacency_list[edge2, edge1] = 1
 
     def fill_adjacency_list(self, adj_list, nodeList):
-        for x in range(len(nodeList)):
-            for y in range(len(nodeList)):
-                adj_list[x,y] = self.adjacency_list[nodeList[x],nodeList[y]]
+        adj_list = self.adjacency_list[np.ix_(nodeList, nodeList)]
                 
     def show(self, title, colors, withCenters=False, final=False, showEdges=True):
         plt.title(title)
@@ -60,7 +54,7 @@ class MyGraph():
         plt.ylabel("Y")
         if showEdges:
             nx.draw_networkx_edges(self.graph,self.nodes,alpha=0.4, edge_color="#424242")
-        nx.draw_networkx_nodes(self.graph,self.nodes, node_color=list(colors),cmap=plt.cm.jet, alpha=0.5,
+        nx.draw_networkx_nodes(self.graph,self.nodes, node_color=list(colors),cmap=plt.cm.jet,
                        node_size=20)
         # Debugging: colors the first node    
         # nx.draw_networkx_nodes(self.graph,self.nodes, nodelist = [0],cmap=plt.cm.jet,node_color="#ff1cf3",
@@ -69,7 +63,7 @@ class MyGraph():
         # nx.draw_networkx_labels(self.graph,self.nodes, {x:str(x) for x in self.nodes.keys()}, font_size=4)
 
         if withCenters:
-            nx.nx.draw_networkx_nodes(self.graph,self.nodes,nodelist =list(self.clusterCenters),node_color="#ff1c03",node_shape="X",
+            nx.draw_networkx_nodes(self.graph,self.nodes,nodelist =list(self.clusterCenters),node_color="#ff1c03",node_shape="X",
                         node_size=80)
         plt.pause(1)
         if final:
@@ -87,15 +81,18 @@ class MyGraph():
         return colors
 
 class My3DGraph(MyGraph):
-    def __init__(self, networkxGraph, trimeshMesh, numNodes, nodes, edges):
-        print("Working with a 3D graph. Graph created")
+    def __init__(self, networkxGraph, trimeshMesh, numNodes, nodes, edges, actualVertices):
         super().__init__(networkxGraph, numNodes, nodes, edges)
         self.mesh = trimeshMesh
+        self.actualVertices = actualVertices
+        self.color_palatte = [[249, 65, 68, 255],[243, 114, 44, 255],[248, 150, 30, 255],[249, 199, 79, 255],[144, 190, 109, 255],[67, 170, 139, 255],[87, 117, 144, 255]]
     
     def show(self, title, colors):
-        for i in range(self.clusterCenters.shape[0]):
-            indices = np.where(colors == i)
-            self.mesh.visual.vertex_colors[indices] = trimesh.visual.random_color()
-        # indices = list(range(self.mesh.visual.vertex_colors.shape[0]))
+        # Due to some issue with trimesh, the vertex_colors do not update when called in quixck succession
+        # As a result, I set the color of the vertices twice. This works.
+        for idkwhy in range(2):
+            for i in range(self.clusterCenters.shape[0]):
+                indices = np.where(colors == i)[0]
+                self.mesh.visual.vertex_colors[indices] = self.color_palatte[i]
         self.mesh.show()
         

@@ -58,6 +58,6 @@ class KMeans_Naive():
 if __name__ == "__main__":
     numNodes = 1000
     circles, colors = datasets.make_moons(n_samples=1500, random_state=8, noise=0.05)
-    points = Points()
+    points = MyPoints()
     points.setNetwork(circles, colors)
     kmeans = KMeans_Naive(points, 2)
