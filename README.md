@@ -26,6 +26,6 @@ Running the files in this order, individually show the entire picture (that I'm 
 2. KMeans.py: We can see that it is not able to seperate the two clusters using PageRank as the update mechanism
 <img src="Output images/moons_kmeans_pagerank.png">
 3. KMeans_3D.py: Applying the same PageRank method to meshes, we can see that it is possible to achieve considerable clustering. While the termination criteria is not clear, the different parts of the body are segregated.
-<img src="Output images/bear1.png" width="300" height="600">
-<img src="Output images/dog.png" width="300" height="600">
-<img src="Output images/dolphin3.png" width="600" height="600">
+<img src="Output images/bear1.png" width="300" height="600" display:"inline-block" >
+<img src="Output images/dog.png" width="300" height="600" display:"inline-block">
+<img src="Output images/dolphin3.png" width="600" height="600" display:"inline-block">
