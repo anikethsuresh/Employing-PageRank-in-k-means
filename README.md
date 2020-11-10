@@ -22,4 +22,4 @@ The following project uses kmeans to perform clustering by using PageRank as the
 Download all the libraries in the requirements file using 'pip install -r requirements.txt'
 Running the files in this order, individually show the entire picture (that I'm trying to show)
 1. KMeans_Naive.py
-![AAAAA](Output images/moons_kmeans_naive.png)
+![[Output images/moons_kmeans_naive.png]]
