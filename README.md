@@ -16,6 +16,7 @@ The following project uses kmeans to perform clustering by using PageRank as the
     - [numpy](https://numpy.org/): Numerical computing tools
     - [networkx](https://networkx.org/): Python package for the creation, manipulation, and study of the structure, dynamics, and functions of complex networks.
     - [matplotlib](https://matplotlib.org/): Matplotlib is a comprehensive library for creating static, animated, and interactive visualizations in Python. 
+    - [trimesh](https://github.com/mikedh/trimesh): Trimesh is a pure Python (2.7-3.4+) library for loading and using triangular meshes.
     
     
 ### Running the program
