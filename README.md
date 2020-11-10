@@ -21,5 +21,11 @@ The following project uses kmeans to perform clustering by using PageRank as the
 ### Running the program
 Download all the libraries in the requirements file using 'pip install -r requirements.txt'
 Running the files in this order, individually show the entire picture (that I'm trying to show)
-1. KMeans_Naive.py
-![[Output images/moons_kmeans_naive.png]]
+1. KMeans_Naive.py: In cases where this cannot be seperated using naive k-means it fails as below:
+<img src="Output images/moons_kmeans_naive.png">
+2. KMeans.py: We can see that it is not able to seperate the two clusters using PageRank as the update mechanism
+<img src="Output images/moons_kmeans_pagerank.png">
+3. KMeans_3D.py: Applying the same PageRank method to meshes, we can see that it is possible to achieve considerable clustering. While the termination criteria is not clear, the different parts of the body are segregated.
+<img src="Output images/bear1.png" width="300" height="600">
+<img src="Output images/dog.png" width="300" height="600">
+<img src="Output images/dolphin3.png" width="600" height="600">
