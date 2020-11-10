@@ -13,15 +13,15 @@ The following project uses kmeans to perform clustering by using PageRank as the
 8. *KMeans.py*: Implements the k-means algorithm with PageRank in a 2D Mesh.
 9. *KMeansWithPageRank.py*: main class which provides the skeleton to perform k-means using PageRank.
 10. **requirements.txt**: requirements text file with the different libraries used in the project. In reality, the main libraries would be:
-    - [numpy](https://numpy.org/): Numerical computing tools
+    - [numpy](https://numpy.org/): Numerical computing tools.
     - [networkx](https://networkx.org/): Python package for the creation, manipulation, and study of the structure, dynamics, and functions of complex networks.
     - [matplotlib](https://matplotlib.org/): Matplotlib is a comprehensive library for creating static, animated, and interactive visualizations in Python. 
     - [trimesh](https://github.com/mikedh/trimesh): Trimesh is a pure Python (2.7-3.4+) library for loading and using triangular meshes.
     
     
 ### Running the program
-Download all the libraries in the requirements file using 'pip install -r requirements.txt'
-Running the files in this order, individually show the entire picture (that I'm trying to show)
+Download all the libraries in the requirements file using 'pip install -r requirements.txt'.
+Running the files in this order, individually show the entire picture (that I'm trying to show).
 1. KMeans_Naive.py: In cases where this cannot be seperated using naive k-means it fails as below:
 <img src="Output images/moons_kmeans_naive.png">
 2. KMeans.py: We can see that it is not able to seperate the two clusters using PageRank as the update mechanism
