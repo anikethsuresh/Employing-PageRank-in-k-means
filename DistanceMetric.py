@@ -20,40 +20,41 @@ class DistanceMetric():
         # Distance between all pairs of nodes/points/vertices
         self.all_distances = None
 
-    # def init_distances(self, Graph):
-        # self.all_distances = dict(nx.all_pairs_shortest_path_length(Graph.graph))    
-
-
     def init_distances(self, Graph):
-        """
-        Initialize the distance matrix, which holds the distance between all pairs of nodes
-        Implements the Floyd-Warshall algorithm for all pairs shortest paths
-        """
-        print("Calculating the distance between all pairs of nodes")
-        start_time = time.time()
-        nodes = list(Graph.nodes)
-        edges = np.array(Graph.edges)
-        # Set all distances to infinity
-        distance = np.ones([len(nodes),len(nodes)]) * 9999
-        # Set all self-distances to 0
-        distance[nodes, nodes] = 0
-        # Set the edges available to 1
-        distance[edges[:,0], edges[:,1]] = distance[edges[:,1], edges[:,0]] = 1
-        for k in range(len(nodes)):
-            for i in range(len(nodes)):
-                for j in range(len(nodes)):
-                    if distance[i][j] > distance[i][k] + distance[k][j]:
-                        distance[i][j] =  distance[i][k] + distance[k][j]
-        # Create dictionary where the keys are the nodes and the values are the distances to each node
-        # This is the same format that networkx works.
-        distances_dict = {}
-        for i in range(len(nodes)):
-            node_i_distances = distance[i]
-            node_i_distances_dict = {x : node_i_distances[x] for x in range(len(nodes))}
-            distances_dict[i] = node_i_distances_dict
-        self.all_distances =  distances_dict
-        stop_time = time.time()
-        print("Completed.\nTook " + str(stop_time - start_time) + " sec")
+        self.all_distances = dict(nx.all_pairs_shortest_path_length(Graph.graph))    
+
+
+    # def init_distances(self, Graph):
+    #     """
+    #     Initialize the distance matrix, which holds the distance between all pairs of nodes
+    #     Implements the Floyd-Warshall algorithm for all pairs shortest paths.
+    #     This is a slower implementation that the function call above
+    #     """
+    #     print("Calculating the distance between all pairs of nodes")
+    #     start_time = time.time()
+    #     nodes = list(Graph.nodes)
+    #     edges = np.array(Graph.edges)
+    #     # Set all distances to infinity
+    #     distance = np.ones([len(nodes),len(nodes)]) * 9999
+    #     # Set all self-distances to 0
+    #     distance[nodes, nodes] = 0
+    #     # Set the edges available to 1
+    #     distance[edges[:,0], edges[:,1]] = distance[edges[:,1], edges[:,0]] = 1
+    #     for k in range(len(nodes)):
+    #         for i in range(len(nodes)):
+    #             for j in range(len(nodes)):
+    #                 if distance[i][j] > distance[i][k] + distance[k][j]:
+    #                     distance[i][j] =  distance[i][k] + distance[k][j]
+    #     # Create dictionary where the keys are the nodes and the values are the distances to each node
+    #     # This is the same format that networkx works.
+    #     distances_dict = {}
+    #     for i in range(len(nodes)):
+    #         node_i_distances = distance[i]
+    #         node_i_distances_dict = {x : node_i_distances[x] for x in range(len(nodes))}
+    #         distances_dict[i] = node_i_distances_dict
+    #     self.all_distances =  distances_dict
+    #     stop_time = time.time()
+    #     print("Completed.\nTook " + str(stop_time - start_time) + " sec")
 
     
 

@@ -94,7 +94,10 @@ class MyGraph():
         Arguments:
         nodeList - list, list of nodes
         """
-        adj_list = self.adjacency_list[np.ix_(nodeList, nodeList)]
+        # adj_list = self.adjacency_list[np.ix_(nodeList, nodeList)]
+        for x in range(len(nodeList)):
+            for y in range(len(nodeList)):
+                adj_list[x,y] = self.adjacency_list[x,y]
                 
 
     def show(self, title, colors, withCenters=False, final=False, showEdges=True):

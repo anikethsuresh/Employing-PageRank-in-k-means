@@ -32,8 +32,8 @@ def get_edges(points, threshold):
     return edges
 
 if __name__ == "__main__":
-    numNodes = 500
-    circles, _ = datasets.make_moons(n_samples=numNodes, random_state=8, noise=0.05)
+    numNodes = 1500
+    circles, colors = datasets.make_blobs(n_samples=numNodes, random_state=8)
     nodes = {}
     for point in range(len(circles)):
         nodes[point] = tuple(circles[point])
@@ -47,4 +47,4 @@ if __name__ == "__main__":
     # Get the pagerank vector for all the points. Stronger reds indicate important nodes.
     colors = myGraph.page_rank(myGraph.adjacency_list, numNodes)
     myGraph.show("Coloured based on PageRank vector", colors, showEdges=False)
-    KMeansWithPageRank(myGraph, 2, showEdges=False)
+    KMeansWithPageRank(myGraph, 3, showEdges=False)

@@ -32,7 +32,7 @@ def getEdgesInMyFormat(mesh, nodes):
 
 if __name__ == "__main__":
     # Load the mesh
-    mesh = trimesh.load("Bear - low poly.glb", force="mesh")
+    mesh = trimesh.load("Meshes/Bear - low poly.glb", force="mesh")
     # Loaded mesh automatically has a texture for the faces. Set this to a ColorVisual. Allows you to work with the
     # colors of the mesh
     mesh.visual = trimesh.visual.color.ColorVisuals()

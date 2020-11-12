@@ -71,9 +71,10 @@ class KMeansWithPageRank():
             if terminationCriteria:
                 self.graph.clusterCenters = oldClusterCenters
                 if isinstance(self.graph, My3DGraph):
+                    print("THE END")
                     self.graph.show(self.colors)
                 elif isinstance(self.graph, MyGraph):
-                    self.graph.show("Final Clusters (Total Iterations: " + str(i) + ")", self.colors, withCenters=True, final=True, showEdges=self.showEdges)
+                    self.graph.show("Final Clusters (Total Iterations: " + str(i) + ")", self.colors, final=True, showEdges=self.showEdges)
                 break
             
 
@@ -96,7 +97,7 @@ class KMeansWithPageRank():
             self.graph.clusterCenters[cluster_i] =  nodes[np.argmax(cluster_page_rank)]
 
 if __name__ == "__main__":
-    numNodes = 1000
+    numNodes = 500
     G = nx.random_geometric_graph(numNodes,0.16, seed=1643)
     nodes = nx.get_node_attributes(G,'pos')
     edges = list(G.edges)
@@ -105,4 +106,4 @@ if __name__ == "__main__":
     colors = myGraph.page_rank(myGraph.adjacency_list, numNodes)
     myGraph.show("PageRank over the entire graph", colors)
 
-    KMeansWithPageRank(myGraph, 6)
+    KMeansWithPageRank(myGraph, 4)
